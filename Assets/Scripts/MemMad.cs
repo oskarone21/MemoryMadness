@@ -15,7 +15,7 @@ public class MemMad : MonoBehaviour
 
 
     public static string[] suits = new string[] { "C", "D", "H", "S"};
-    public static string[] values = new string[] { "A", "2", "3", "4", "5", "6", "7", "8", "9", "J", "Q", "K"};
+    public static string[] values = new string[] { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
     public List<string>[] tops;
     public List<string>[] middles;
     public List<string>[] bottoms;
@@ -55,10 +55,10 @@ public class MemMad : MonoBehaviour
         deck = GenerateDeck();
         Shuffle(deck);
 
-        //test the cards in the deck
-        foreach (string card in deck){
-            print (card);
-        }
+        // //test the cards in the deck
+        // foreach (string card in deck){
+        //     print (card);
+        // }
         MemMadSort();
         StartCoroutine(MemMadDeal());
     }
