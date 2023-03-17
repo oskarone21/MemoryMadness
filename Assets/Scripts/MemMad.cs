@@ -6,8 +6,11 @@ using System.Linq;
 public class MemMad : MonoBehaviour
 {
 
+    
     public Sprite[] cardFaces;
     public GameObject cardPrefab;
+
+    //positions of where the cards go - white boxes
     public GameObject[] topPos;
     public GameObject[] middlePos;
     public GameObject[] bottomPos;
@@ -16,11 +19,14 @@ public class MemMad : MonoBehaviour
 
     public static string[] suits = new string[] { "C", "D", "H", "S"};
     public static string[] values = new string[] { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+
+    //cards that go into the correct positions
     public List<string>[] tops;
     public List<string>[] middles;
     public List<string>[] bottoms;
     public List<string>[] handcards;
 
+    //cards that go into above list<string>
     private List<string> top0 = new List<string>();
     private List<string> top1 = new List<string>();
     private List<string> top2 = new List<string>();
@@ -63,6 +69,7 @@ public class MemMad : MonoBehaviour
         StartCoroutine(MemMadDeal());
     }
 
+    //makes the deck
     public static List<string> GenerateDeck(){
 
         List<string> newDeck = new List<string>();
@@ -74,6 +81,7 @@ public class MemMad : MonoBehaviour
         return newDeck;
     }
 
+    //pass in the deck and shuffle the cards
     void Shuffle<T>(List<T> list){
         System.Random random = new System.Random();
         int n = list.Count;
