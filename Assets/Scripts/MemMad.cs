@@ -72,7 +72,7 @@ public class MemMad : MonoBehaviour
     //makes the deck
     public static List<string> GenerateDeck(){
 
-        List<string> newDeck = new List<string>();
+        List<string> newDeck = Enumerable.Empty<string>().ToList();
         foreach (string s in suits){
             foreach (string v in values){
                 newDeck.Add(s+v);
@@ -82,7 +82,7 @@ public class MemMad : MonoBehaviour
     }
 
     //pass in the deck and shuffle the cards
-    void Shuffle<T>(List<T> list){
+    private void Shuffle<T>(List<T> list){
         System.Random random = new System.Random();
         int n = list.Count;
         while (n > 1){
@@ -154,7 +154,7 @@ public class MemMad : MonoBehaviour
 
     }
 
-    void MemMadSort(){
+    private void MemMadSort(){
         for (int i = 0; i < 3; i++ ){
             bottoms[i].Add(deck.Last<string>());
             deck.RemoveAt(deck.Count - 1);

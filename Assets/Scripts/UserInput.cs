@@ -9,6 +9,10 @@ public class UserInput : MonoBehaviour
 
     private PointSystem pointSys;
 
+    private string HAND_0 = "Hand0";
+
+    private string HAND_1 = "Hand1";
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,17 +31,14 @@ public class UserInput : MonoBehaviour
         if (Input.GetMouseButtonDown(0)){
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -10 ));
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-            if (hit){
-                //clicked on a card
-                if (hit.collider.CompareTag("Card")){
-                    string parentObjectName = hit.collider.gameObject.transform.parent.gameObject.name;
-                    if(parentObjectName == "Hand0" || parentObjectName == "Hand1") {
-                        ClickOnHandCard(hit.collider.gameObject);
-                    } else {
-                        ClickGameCard(hit.collider.gameObject);
-                    }
+            //clicked on a card
+            if (hit && hit.collider.CompareTag("Card")){
+                string parentObjectName = hit.collider.gameObject.transform.parent.gameObject.name;
+                if(parentObjectName == HAND_0 || parentObjectName == HAND_1) {
+                    ClickOnHandCard(hit.collider.gameObject);
+                } else {
+                    ClickGameCard(hit.collider.gameObject);
                 }
-
             }
         }
     }
