@@ -6,8 +6,11 @@ using System.Linq;
 public class MemMad : MonoBehaviour
 {
 
+    
     public Sprite[] cardFaces;
     public GameObject cardPrefab;
+
+    //positions of where the cards go - white boxes
     public GameObject[] topPos;
     public GameObject[] middlePos;
     public GameObject[] bottomPos;
@@ -15,12 +18,15 @@ public class MemMad : MonoBehaviour
 
 
     public static string[] suits = new string[] { "C", "D", "H", "S"};
-    public static string[] values = new string[] { "A", "2", "3", "4", "5", "6", "7", "8", "9", "J", "Q", "K"};
+    public static string[] values = new string[] { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+
+    //cards that go into the correct positions
     public List<string>[] tops;
     public List<string>[] middles;
     public List<string>[] bottoms;
     public List<string>[] handcards;
 
+    //cards that go into above list<string>
     private List<string> top0 = new List<string>();
     private List<string> top1 = new List<string>();
     private List<string> top2 = new List<string>();
@@ -55,17 +61,18 @@ public class MemMad : MonoBehaviour
         deck = GenerateDeck();
         Shuffle(deck);
 
-        //test the cards in the deck
-        foreach (string card in deck){
-            print (card);
-        }
+        // //test the cards in the deck
+        // foreach (string card in deck){
+        //     print (card);
+        // }
         MemMadSort();
         StartCoroutine(MemMadDeal());
     }
 
+    //makes the deck
     public static List<string> GenerateDeck(){
 
-        List<string> newDeck = new List<string>();
+        List<string> newDeck = Enumerable.Empty<string>().ToList();
         foreach (string s in suits){
             foreach (string v in values){
                 newDeck.Add(s+v);
@@ -74,7 +81,8 @@ public class MemMad : MonoBehaviour
         return newDeck;
     }
 
-    void Shuffle<T>(List<T> list){
+    //pass in the deck and shuffle the cards
+    private void Shuffle<T>(List<T> list){
         System.Random random = new System.Random();
         int n = list.Count;
         while (n > 1){
@@ -146,7 +154,7 @@ public class MemMad : MonoBehaviour
 
     }
 
-    void MemMadSort(){
+    private void MemMadSort(){
         for (int i = 0; i < 3; i++ ){
             bottoms[i].Add(deck.Last<string>());
             deck.RemoveAt(deck.Count - 1);
