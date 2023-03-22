@@ -9,9 +9,9 @@ public class UserInput : MonoBehaviour
 
     private PointSystem pointSys;
 
-    private string HAND_0 = "Hand0";
+    private const string HAND_0 = "Hand0";
 
-    private string HAND_1 = "Hand1";
+    private const string HAND_1 = "Hand1";
 
     // Start is called before the first frame update
     void Start()
