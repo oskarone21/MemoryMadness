@@ -70,14 +70,10 @@ public class UpdateSprite : MonoBehaviour
 
     private void UpdateCardColor()
     {
-        if (userInput.selectedHandCard != null && userInput.selectedHandCard.name == name)
-        {
-            spriteRenderer.color = Color.yellow;
-        }
-        else
-        {
-            spriteRenderer.color = Color.white;
-        }
+        //coalescing way to do the old if else statement in one line.
+        spriteRenderer.color = userInput.selectedHandCard != null && userInput.selectedHandCard.name == name
+            ? Color.yellow
+            : Color.white;
     }
 
     private void OnCardClick()
@@ -88,6 +84,8 @@ public class UpdateSprite : MonoBehaviour
         }
         else
         {
+            //coalescing way to do the old if else statement in one line.
+            //if this condition is true ? then return null : otherwise return gameObject
             userInput.selectedHandCard = userInput.selectedHandCard.name == name ? null : gameObject;
         }
     }

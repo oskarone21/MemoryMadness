@@ -40,11 +40,9 @@ public class MemoryMadnessController : MonoBehaviour
         StartCoroutine(MemMadDeal());
     }
 
-    public static List<string> GenerateDeck()
-    {
-        return suits.SelectMany(_ => values, (suit, value) => suit + value).ToList();
-    }
-
+    public static List<string> GenerateDeck() => 
+        suits.SelectMany(_ => values, (suit, value) => suit + value).ToList();
+    
     private static void Shuffle<T>(IList<T> list)
     {
         System.Random random = new();
@@ -53,6 +51,11 @@ public class MemoryMadnessController : MonoBehaviour
         {
             int k = random.Next(n--);
             (list[k], list[n]) = (list[n], list[k]);
+            //the above is the simplification of the previous code below, it is swapping the two elements without use of temp variable.
+            //n --;
+            //T temp = list[k];
+            //list[k] = list[n];
+            //list[n] = temp;
         }
     }
 
