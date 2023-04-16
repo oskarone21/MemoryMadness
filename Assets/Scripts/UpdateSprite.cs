@@ -1,55 +1,94 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UpdateSprite : MonoBehaviour
 {
+    [SerializeField] private Sprite cardFace;
+    [SerializeField] private Sprite cardBack;
 
-    public Sprite cardFace;
-    public Sprite cardBack;
     private SpriteRenderer spriteRenderer;
     private Selectable selectable;
-    private MemMad memMad;
+    private MemoryMadnessController memMad;
     private UserInput userInput;
 
-
-
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        List<string> deck = MemMad.GenerateDeck();
-        memMad = FindObjectOfType<MemMad>();
-        userInput = FindObjectOfType<UserInput>();
+        SetCardFace();
+        InitializeComponents();
+        AddClickListener();
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+        UpdateCardSprite();
+        UpdateCardColor();
+    }
+
+    private void SetCardFace()
+    {
+        List<string> deck = MemoryMadnessController.GenerateDeck();
+        memMad = FindObjectOfType<MemoryMadnessController>();
 
         int i = 0;
-        foreach (string card in deck){
-            if (this.name == card){
+        foreach (string card in deck)
+        {
+            if (name == card)
+            {
                 cardFace = memMad.cardFaces[i];
                 break;
             }
             i++;
         }
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        selectable = GetComponent<Selectable>();
     }
 
-
-    // Update is called once per frame
-    void Update()
+    private void InitializeComponents()
     {
-        if (selectable.faceUp == true){
-            spriteRenderer.sprite = cardFace;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        selectable = GetComponent<Selectable>();
+        userInput = FindObjectOfType<UserInput>();
+    }
+
+    private void AddClickListener()
+    {
+        // Add event listener for mouse click
+        GetComponent<BoxCollider2D>().gameObject.AddComponent<EventTrigger>();
+        EventTrigger trigger = GetComponent<EventTrigger>();
+        EventTrigger.Entry entry = new();
+        entry.eventID = EventTriggerType.PointerClick;
+        entry.callback.AddListener(_ => { OnCardClick(); });
+        trigger.triggers.Add(entry);
+    }
+
+    private void UpdateCardSprite()
+    {
+        spriteRenderer.sprite = selectable.faceUp ? cardFace : cardBack;
+    }
+
+    private void UpdateCardColor()
+    {
+        if (userInput.selectedHandCard != null && userInput.selectedHandCard.name == name)
+        {
+            spriteRenderer.color = Color.yellow;
         }
-        else {
-            spriteRenderer.sprite = cardBack;
+        else
+        {
+            spriteRenderer.color = Color.white;
         }
-        if (userInput.selectedHandCard){
-            if (name == userInput.selectedHandCard.name){
-                spriteRenderer.color = Color.yellow;
-            }
-            else {
-                spriteRenderer.color = Color.white;
-            }
+    }
+
+    private void OnCardClick()
+    {
+        if (userInput.selectedHandCard == null)
+        {
+            userInput.selectedHandCard = gameObject;
+        }
+        else
+        {
+            userInput.selectedHandCard = userInput.selectedHandCard.name == name ? null : gameObject;
         }
     }
 }
