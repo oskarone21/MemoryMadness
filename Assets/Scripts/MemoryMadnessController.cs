@@ -19,54 +19,13 @@ public class MemoryMadnessController : MonoBehaviour
     private List<string>[][] cardPositions;
 
     public List<string> deck;
-
-    private void Start()
-    {
-        cardPositions = new[]
-        {
-            new[] { new List<string>(), new List<string>(), new List<string>() }, // Tops
-            new[] { new List<string>(), new List<string>(), new List<string>() }, // Middles
-            new[] { new List<string>(), new List<string>(), new List<string>() }, // Bottoms
-            new[] { new List<string>(), new List<string>() } // Hands
-        };
-        PlayCards();
-    }
-
-    private void PlayCards()
-    {
-        deck = GenerateDeck();
-        Shuffle(deck);
-        MemMadSort();
-        StartCoroutine(MemMadDeal());
-    }
-
-    public static List<string> GenerateDeck() => 
-        suits.SelectMany(_ => values, (suit, value) => suit + value).ToList();
     
-    private static void Shuffle<T>(IList<T> list)
+    private void AddCardTo(ICollection<string> cardList)
     {
-        System.Random random = new();
-        int n = list.Count;
-        while (n > 1)
-        {
-            int k = random.Next(n--);
-            (list[k], list[n]) = (list[n], list[k]);
-            //the above is the simplification of the previous code below, it is swapping the two elements without use of temp variable.
-            //n --;
-            //T temp = list[k];
-            //list[k] = list[n];
-            //list[n] = temp;
-        }
+        cardList.Add(deck.Last());
+        deck.RemoveAt(deck.Count - 1);
     }
-
-    private IEnumerator MemMadDeal()
-    {
-        yield return StartCoroutine(DealToPositions(cardPositions[0], topPos));
-        yield return StartCoroutine(DealToPositions(cardPositions[1], middlePos));
-        yield return StartCoroutine(DealToPositions(cardPositions[2], bottomPos));
-        yield return StartCoroutine(DealToPositions(cardPositions[3], handPos));
-    }
-
+    
     private IEnumerator DealToPositions(IReadOnlyList<List<string>> cardLists, IReadOnlyList<GameObject> positions)
     {
         for (int i = 0; i < cardLists.Count; i++)
@@ -83,6 +42,17 @@ public class MemoryMadnessController : MonoBehaviour
         }
     }
     
+    public static List<string> GenerateDeck() => 
+        suits.SelectMany(_ => values, (suit, value) => suit + value).ToList();
+
+    private IEnumerator MemMadDeal()
+    {
+        yield return StartCoroutine(DealToPositions(cardPositions[0], topPos));
+        yield return StartCoroutine(DealToPositions(cardPositions[1], middlePos));
+        yield return StartCoroutine(DealToPositions(cardPositions[2], bottomPos));
+        yield return StartCoroutine(DealToPositions(cardPositions[3], handPos));
+    }
+
     private void MemMadSort()
     {
         for (int i = 0; i < 3; i++)
@@ -98,10 +68,40 @@ public class MemoryMadnessController : MonoBehaviour
         }
     }
     
-    private void AddCardTo(ICollection<string> cardList)
+    private void PlayCards()
     {
-        cardList.Add(deck.Last());
-        deck.RemoveAt(deck.Count - 1);
+        deck = GenerateDeck();
+        Shuffle(deck);
+        MemMadSort();
+        StartCoroutine(MemMadDeal());
+    }
+    
+    private void Start()
+    {
+        cardPositions = new[]
+        {
+            new[] { new List<string>(), new List<string>(), new List<string>() }, // Tops
+            new[] { new List<string>(), new List<string>(), new List<string>() }, // Middles
+            new[] { new List<string>(), new List<string>(), new List<string>() }, // Bottoms
+            new[] { new List<string>(), new List<string>() } // Hands
+        };
+        PlayCards();
+    }
+    
+    private static void Shuffle<T>(IList<T> list)
+    {
+        System.Random random = new();
+        int n = list.Count;
+        while (n > 1)
+        {
+            int k = random.Next(n--);
+            (list[k], list[n]) = (list[n], list[k]);
+            //the above is the simplification of the previous code below, it is swapping the two elements without use of temp variable.
+            //n --;
+            //T temp = list[k];
+            //list[k] = list[n];
+            //list[n] = temp;
+        }
     }
 }
 

@@ -1,64 +1,33 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class UserInput : MonoBehaviour
 {
-
     public GameObject selectedHandCard;
 
     private PointSystem pointSys;
 
     private const string HAND_0 = "Hand0";
-
     private const string HAND_1 = "Hand1";
-
-    // Start is called before the first frame update
-    void Start()
+    
+    private bool AreColorsMatching(char handSuit, char suit)
     {
-        selectedHandCard = null;
-
-        pointSys = FindObjectOfType<PointSystem>();
+        return (handSuit == 'C' && suit == 'S') || (handSuit == 'S' && suit == 'C') ||
+               (handSuit == 'H' && suit == 'D') || (handSuit == 'D' && suit == 'H');
     }
-
-    // Update is called once per frame
-    private void Update()
-    {
-        GetMouseClick();
-    }
-
-    void GetMouseClick(){
-        if (Input.GetMouseButtonDown(0)){
-            Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -10 ));
-            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-            //clicked on a card
-            if (!hit || !hit.collider.CompareTag("Card")) return;
-            string parentObjectName = hit.collider.gameObject.transform.parent.gameObject.name;
-            if(parentObjectName == HAND_0 || parentObjectName == HAND_1) {
-                ClickOnHandCard(hit.collider.gameObject);
-            } else {
-                ClickGameCard(hit.collider.gameObject);
-            }
-        }
-    }
-
-    void ClickOnHandCard(GameObject selected)
+    
+    private void ClickOnHandCard(GameObject selected)
     {
         print("Clicked on hand card");
 
-        // If no card is selected or a different card is clicked on, select it
-        if (selectedHandCard == null || selectedHandCard != selected)
+        if (selectedHandCard == null)
         {
             selectedHandCard = selected;
         }
-        else
-        {
-            // If the same card is clicked on again, deselect it
-            selectedHandCard = null;
-        }
     }
 
-    private void ClickGameCard(GameObject selected){
+    private void ClickGameCard(GameObject selected)
+    {
         print("Clicked on game card");
 
         if (selectedHandCard == null) return;
@@ -69,28 +38,61 @@ public class UserInput : MonoBehaviour
         char selectedSuit = selected.name[0];
         char selectedNumber = selected.name[1];
 
-        //if the number matches
-        //score is 3
-        //if suit matches
-        //score is 2
-        //if colour matches
-        //score is 1
-        if (selectedHandNumber == selectedNumber){
+        if (selectedHandNumber == selectedNumber)
+        {
             pointSys.UpdateScore(3);
             Destroy(selected);
         }
-        else if (selectedHandSuit == selectedSuit){
+        else if (selectedHandSuit == selectedSuit)
+        {
             pointSys.UpdateScore(2);
             Destroy(selected);
-        } 
-        else if ((selectedHandSuit == 'C' && selectedSuit == 'S') || (selectedHandSuit == 'S' && selectedSuit == 'C') || (selectedHandSuit == 'H' && selectedSuit == 'D') || (selectedHandSuit == 'D' && selectedSuit == 'H'))
+        }
+        else if (AreColorsMatching(selectedHandSuit, selectedSuit))
         {
             pointSys.UpdateScore(1);
             Destroy(selected);
         }
-        else {
+        else
+        {
             pointSys.UpdateScore(-1);
-            Destroy(selected);
         }
+    }
+    
+    private void GetMouseClick()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            RaycastHit2D hit = GetRaycastHit2D();
+            if (hit && hit.collider.CompareTag("Card"))
+            {
+                string parentObjectName = hit.collider.gameObject.transform.parent.gameObject.name;
+                if (parentObjectName == HAND_0 || parentObjectName == HAND_1)
+                {
+                    ClickOnHandCard(hit.collider.gameObject);
+                }
+                else
+                {
+                    ClickGameCard(hit.collider.gameObject);
+                }
+            }
+        }
+    }
+
+    private RaycastHit2D GetRaycastHit2D()
+    {
+        Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -10));
+        return Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+    }
+    
+    private void Start()
+    {
+        pointSys = FindObjectOfType<PointSystem>();
+    }
+    
+    // Update is called once per frame
+    private void Update()
+    {
+        GetMouseClick();
     }
 }
