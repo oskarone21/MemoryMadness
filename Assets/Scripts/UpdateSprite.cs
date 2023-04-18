@@ -1,55 +1,60 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class UpdateSprite : MonoBehaviour
 {
-
     public Sprite cardFace;
     public Sprite cardBack;
+
     private SpriteRenderer spriteRenderer;
     private Selectable selectable;
-    private MemMad memMad;
+    private MemoryMadnessController memoryMadness;
     private UserInput userInput;
 
-
-
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        List<string> deck = MemMad.GenerateDeck();
-        memMad = FindObjectOfType<MemMad>();
+        memoryMadness = FindObjectOfType<MemoryMadnessController>();
         userInput = FindObjectOfType<UserInput>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        selectable = GetComponent<Selectable>();
 
+        AssignCardFace();
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+        UpdateCardSprite();
+        HighlightSelectedCard();
+    }
+
+    private void AssignCardFace()
+    {
+        List<string> deck = MemoryMadnessController.GenerateDeck();
         int i = 0;
-        foreach (string card in deck){
-            if (this.name == card){
-                cardFace = memMad.cardFaces[i];
+
+        foreach (string card in deck)
+        {
+            if (name == card)
+            {
+                cardFace = memoryMadness.cardFaces[i];
                 break;
             }
             i++;
         }
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        selectable = GetComponent<Selectable>();
     }
 
-
-    // Update is called once per frame
-    void Update()
+    private void UpdateCardSprite()
     {
-        if (selectable.faceUp == true){
-            spriteRenderer.sprite = cardFace;
-        }
-        else {
-            spriteRenderer.sprite = cardBack;
-        }
-        if (userInput.selectedHandCard){
-            if (name == userInput.selectedHandCard.name){
-                spriteRenderer.color = Color.yellow;
-            }
-            else {
-                spriteRenderer.color = Color.white;
-            }
+        spriteRenderer.sprite = selectable.faceUp ? cardFace : cardBack;
+    }
+
+    private void HighlightSelectedCard()
+    {
+        if (userInput.selectedHandCard)
+        {
+            spriteRenderer.color = (name == userInput.selectedHandCard.name) ? Color.yellow : Color.white;
         }
     }
 }
