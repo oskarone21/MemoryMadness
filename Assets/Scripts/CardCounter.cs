@@ -5,7 +5,6 @@ using TMPro;
 
 public class CardCounter : MonoBehaviour
 {
-
     public TextMeshProUGUI cardCounter;
     private int cardsLeft;
     private MemMad memMad;
