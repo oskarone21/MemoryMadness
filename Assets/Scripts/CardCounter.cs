@@ -11,7 +11,7 @@ public class CardCounter : MonoBehaviour
     private MemMad memMad;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         memMad = FindObjectOfType<MemMad>();
     }
