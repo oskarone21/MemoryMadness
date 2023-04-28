@@ -8,17 +8,17 @@ public class CardCounter : MonoBehaviour
 
     public TextMeshProUGUI cardCounter;
     private int cardsLeft;
-    private MemMad memMad;
+    private MemoryMadnessController memoryMadness;
 
     // Start is called before the first frame update
     void Start()
     {
-        memMad = FindObjectOfType<MemMad>();
+        memoryMadness = FindObjectOfType<MemoryMadnessController>();
     }
 
     void Update()
     {
-        cardsLeft = memMad.deck.Count;
+        cardsLeft = memoryMadness.deck.Count;
         cardCounter.text = "Cards Left: " + cardsLeft;
     }
 }
