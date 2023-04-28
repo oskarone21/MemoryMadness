@@ -1,10 +1,9 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UserInput : MonoBehaviour
 {
     public GameObject selectedHandCard;
-
+    private CardCounter cardCounter;
     private PointSystem pointSys;
 
     private const string HAND_0 = "Hand0";
@@ -41,16 +40,19 @@ public class UserInput : MonoBehaviour
         if (selectedHandNumber == selectedNumber)
         {
             pointSys.UpdateScore(3);
+            cardCounter.UpdateCardCount();
             Destroy(selected);
         }
         else if (selectedHandSuit == selectedSuit)
         {
             pointSys.UpdateScore(2);
+            cardCounter.UpdateCardCount();
             Destroy(selected);
         }
         else if (AreColorsMatching(selectedHandSuit, selectedSuit))
         {
             pointSys.UpdateScore(1);
+            cardCounter.UpdateCardCount();
             Destroy(selected);
         }
         else
@@ -88,6 +90,7 @@ public class UserInput : MonoBehaviour
     private void Start()
     {
         pointSys = FindObjectOfType<PointSystem>();
+        cardCounter = FindObjectOfType<CardCounter>();
     }
     
     // Update is called once per frame
