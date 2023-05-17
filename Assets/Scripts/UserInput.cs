@@ -1,14 +1,16 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UserInput : MonoBehaviour
 {
     public GameObject selectedHandCard;
-
+    private CardCounter cardCounter;
     private PointSystem pointSys;
+    private MemoryMadnessController memoryMadnessController;
 
     private const string HAND_0 = "Hand0";
     private const string HAND_1 = "Hand1";
+    private int matchedCards = 0;
+    private const int totalGridCards = 9;
     
     private bool AreColorsMatching(char handSuit, char suit)
     {
@@ -51,11 +53,31 @@ public class UserInput : MonoBehaviour
         else if (AreColorsMatching(selectedHandSuit, selectedSuit))
         {
             pointSys.UpdateScore(1);
+
             Destroy(selected);
         }
         else
         {
+            Destroy(selected);
             pointSys.UpdateScore(-1);
+        }
+
+        selected.SetActive(false);
+        cardCounter.UpdateCardCount();
+        matchedCards++;
+        
+        if (matchedCards >= totalGridCards)
+        {
+            matchedCards = 0;
+            memoryMadnessController.ReplaceCards();
+        }
+
+        GameObject[] cards = GameObject.FindGameObjectsWithTag("Card");
+
+        if (cards.Length == 1)
+        {
+            memoryMadnessController.ShowEndGameMenu();
+            return;
         }
     }
     
@@ -88,6 +110,8 @@ public class UserInput : MonoBehaviour
     private void Start()
     {
         pointSys = FindObjectOfType<PointSystem>();
+        cardCounter = FindObjectOfType<CardCounter>();
+        memoryMadnessController = FindObjectOfType<MemoryMadnessController>();
     }
     
     // Update is called once per frame
