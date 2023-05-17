@@ -1,13 +1,11 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine;
 
-namespace Assets.Scripts
+public class GameMenuButtonController : MonoBehaviour
 {
-    public class MainMenuButtonController : MonoBehaviour
+    public GameObject gameMenuPanel;
+
+    public void LoadGameMenu()
     {
-        public void LoadMainMenu()
-        {
-            SceneManager.LoadScene("MainMenu");
-        }
+        gameMenuPanel.SetActive(true);
     }
 }

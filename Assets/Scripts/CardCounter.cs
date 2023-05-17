@@ -18,6 +18,10 @@ public class CardCounter : MonoBehaviour
     public void UpdateCardCount()
     {
         cardsLeft--;
+        if(cardsLeft == 0)
+        {
+            cardsLeft = 1;
+        }
         cardCounter.text = $"Cards Left: {cardsLeft}";
     }
 }
