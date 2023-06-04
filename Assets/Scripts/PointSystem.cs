@@ -26,4 +26,6 @@ public class PointSystem : MonoBehaviour
         scoreText.text = "Score: " + score;
     }
 
+    public int GetScore() =>
+        score;
 }

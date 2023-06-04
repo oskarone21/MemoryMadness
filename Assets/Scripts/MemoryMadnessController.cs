@@ -5,6 +5,8 @@ using System.Linq;
 
 public class MemoryMadnessController : MonoBehaviour
 {
+    private CardCounter cardCounter;
+
     public Sprite[] cardFaces;
     public GameObject cardPrefab;
 
@@ -16,7 +18,6 @@ public class MemoryMadnessController : MonoBehaviour
     private static readonly string[] suits = { "C", "D", "H", "S" };
     private static readonly string[] values = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
 
-    private CardCounter cardCounter;
     private List<string>[][] cardPositions;
     public List<string> deck;
 
@@ -25,11 +26,12 @@ public class MemoryMadnessController : MonoBehaviour
         cardList.Add(deck.Last());
         deck.RemoveAt(deck.Count - 1);
     }
-    
+
     public void ReplaceCards()
     {
         // Clear the grid
         GameObject[] cards = GameObject.FindGameObjectsWithTag("Card");
+
         foreach (GameObject card in cards)
         {
             Destroy(card);
@@ -46,8 +48,6 @@ public class MemoryMadnessController : MonoBehaviour
         }
         else
         {
-            SetCardPositions();
-
             AddCardTo(cardPositions[0][0]); // Add card to the first position in the top row
             AddCardTo(cardPositions[3][0]); // Add card to the first position in the hand
 
@@ -93,6 +93,7 @@ public class MemoryMadnessController : MonoBehaviour
             yield return StartCoroutine(DealToPositions(cardPositions[3], handPos));
         }
     }
+
 
     private void MemMadSort()
     {
@@ -150,12 +151,5 @@ public class MemoryMadnessController : MonoBehaviour
         // Wait for 3 seconds to ensure the cards have been dealt
         yield return new WaitForSeconds(3);
     }
-
-    public void ShowEndGameMenu()
-    {
-        // Display the end game menu with the total score
-        // Implement your end game menu logic here
-    }
-
 }
 
