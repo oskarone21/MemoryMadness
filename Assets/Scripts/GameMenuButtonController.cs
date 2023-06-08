@@ -12,6 +12,6 @@ public class GameMenuButtonController : MonoBehaviour
     public void Reshuffle()
     {
         MemoryMadnessController memoryMadnessController = FindObjectOfType<MemoryMadnessController>();
-        //memoryMadnessController.Reshuffle();
+        memoryMadnessController.ReshuffleOnButtonClick();
     }
 }
