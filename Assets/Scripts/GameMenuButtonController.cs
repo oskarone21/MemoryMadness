@@ -8,4 +8,18 @@ public class GameMenuButtonController : MonoBehaviour
     {
         gameMenuPanel.SetActive(true);
     }
+
+    public void Reshuffle()
+    {
+        MemoryMadnessController memoryMadnessController = FindObjectOfType<MemoryMadnessController>();
+        memoryMadnessController.ReshuffleOnButtonClick();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Reshuffle();
+        }
+    }
 }

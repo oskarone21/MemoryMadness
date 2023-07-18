@@ -1,14 +1,18 @@
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class UserInput : MonoBehaviour
 {
-    public GameObject selectedHandCard;
-    private CardCounter cardCounter;
-    private PointSystem pointSys;
-    private MemoryMadnessController memoryMadnessController;
-
     private const string HAND_0 = "Hand0";
     private const string HAND_1 = "Hand1";
+
+    private MemoryMadnessController memoryMadnessController;
+    public EndGameMenuController endGameMenuController;
+
+    private CardCounter cardCounter;
+    private PointSystem pointSys;
+    public GameObject selectedHandCard;
+
     private int matchedCards = 0;
     private const int totalGridCards = 9;
     
@@ -65,6 +69,13 @@ public class UserInput : MonoBehaviour
         selected.SetActive(false);
         cardCounter.UpdateCardCount();
         matchedCards++;
+
+        int _CurrentScore = pointSys.GetScore();
+
+        if(_CurrentScore < 0)
+        {
+            endGameMenuController.Show(_CurrentScore);
+        }
         
         if (matchedCards >= totalGridCards)
         {
@@ -76,7 +87,7 @@ public class UserInput : MonoBehaviour
 
         if (cards.Length == 1)
         {
-            memoryMadnessController.ShowEndGameMenu();
+            endGameMenuController.Show(_CurrentScore);
             return;
         }
     }
