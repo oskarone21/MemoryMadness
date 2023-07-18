@@ -14,4 +14,12 @@ public class GameMenuButtonController : MonoBehaviour
         MemoryMadnessController memoryMadnessController = FindObjectOfType<MemoryMadnessController>();
         memoryMadnessController.ReshuffleOnButtonClick();
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Reshuffle();
+        }
+    }
 }
