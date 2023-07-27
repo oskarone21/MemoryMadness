@@ -8,12 +8,14 @@ using System;
 public class MemoryMadnessController : MonoBehaviour
 {
     private CardCounter cardCounter;
+    public int gridSize = 4;
 
     public Sprite[] cardFaces;
     public GameObject cardPrefab;
 
     public GameObject[] topPos;
-    public GameObject[] middlePos;
+    public GameObject[] upperMiddlePos;
+    public GameObject[] lowerMiddlePos;
     public GameObject[] bottomPos;
     public GameObject[] handPos;
 
@@ -116,36 +118,69 @@ public class MemoryMadnessController : MonoBehaviour
 
     private IEnumerator MemMadDeal(bool lastDeal = false, bool autoReshuffle = true)
     {
+        //could create tempTopPos and do for loop to populate with records until reach gridsize
+        //else would have to re-do DealToPositions
+        GameObject[] tempTopPos = new GameObject[gridSize];
+        GameObject[] tempUpperMiddlePos = new GameObject[gridSize];
+        GameObject[] tempLowerMiddlePos = new GameObject[gridSize];
+        GameObject[] tempBottomPos = new GameObject[gridSize];
+        
+        for (int i = 0; i < gridSize; i++){
+            tempTopPos[i] = topPos[i];
+            tempUpperMiddlePos[i] = upperMiddlePos[i];
+            tempLowerMiddlePos[i] = lowerMiddlePos[i];
+            tempBottomPos[i] = bottomPos[i];
+        }
+
         if (lastDeal)
         {
             yield return StartCoroutine(DealToPositions(cardPositions[0], topPos));
-            yield return StartCoroutine(DealToPositions(cardPositions[3], handPos));
+            yield return StartCoroutine(DealToPositions(cardPositions[4], handPos));
         }
         else
         {
-            yield return StartCoroutine(DealToPositions(cardPositions[0], topPos));
-            yield return StartCoroutine(DealToPositions(cardPositions[1], middlePos));
-            yield return StartCoroutine(DealToPositions(cardPositions[2], bottomPos));
-            if (autoReshuffle)
+            //yield return StartCoroutine(DealToPositions(cardPositions[0], topPos));
+            //yield return StartCoroutine(DealToPositions(cardPositions[1], upperMiddlePos));
+            //yield return StartCoroutine(DealToPositions(cardPositions[2], bottomPos));
+
+            //if (gridSize >= 2)
+            //{
+            //    yield return StartCoroutine(DealToPositions(cardPositions[0], tempTopPos));
+            //    yield return StartCoroutine(DealToPositions(cardPositions[1], tempUpperMiddlePos));
+            //} 
+            //if (gridSize >= 3)
+            //{
+            //    yield return StartCoroutine(DealToPositions(cardPositions[2], tempLowerMiddlePos));
+            //}
+            if (gridSize == 4)
             {
-                yield return StartCoroutine(DealToPositions(cardPositions[3], handPos, true));
+                yield return StartCoroutine(DealToPositions(cardPositions[0], tempTopPos));
+                yield return StartCoroutine(DealToPositions(cardPositions[1], tempUpperMiddlePos));
+                yield return StartCoroutine(DealToPositions(cardPositions[2], tempLowerMiddlePos));
+                yield return StartCoroutine(DealToPositions(cardPositions[3], tempBottomPos));
             }
+
+            //if (autoReshuffle)
+            //{
+            //    yield return StartCoroutine(DealToPositions(cardPositions[4], handPos, true));
+            //}
         }
     }
 
 
     private void MemMadSort()
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 4; i++)
         {
-            AddCardTo(cardPositions[2][i]); // Bottom
-            AddCardTo(cardPositions[1][i]); // Middle
+            AddCardTo(cardPositions[3][i]); // Bottom
+            AddCardTo(cardPositions[2][i]); // LowerMiddle
+            AddCardTo(cardPositions[1][i]); // UpperMiddle
             AddCardTo(cardPositions[0][i]); // Top
         }
 
         for (int i = 0; i < 2; i++)
         {
-            AddCardTo(cardPositions[3][i]); // Hand
+            AddCardTo(cardPositions[4][i]); // Hand
         }
     }
     
@@ -165,13 +200,23 @@ public class MemoryMadnessController : MonoBehaviour
         cardCounter = FindObjectOfType<CardCounter>();
     }
 
-    private void SetCardPositions() => cardPositions = new[]
-        {
-            new[] { new List<string>(), new List<string>(), new List<string>() }, // Tops
-            new[] { new List<string>(), new List<string>(), new List<string>() }, // Middles
-            new[] { new List<string>(), new List<string>(), new List<string>() }, // Bottoms
-            new[] { new List<string>(), new List<string>() } // Hands
-        };
+    private void SetCardPositions()
+    {
+        new[] { new List<string>(), new List<string>(), new List<string>() }, // Tops
+        new[] { new List<string>(), new List<string>(), new List<string>() }, // upperMiddles
+        new[] { new List<string>(), new List<string>(), new List<string>() }, // lowerMiddles
+        new[] { new List<string>(), new List<string>(), new List<string>() }, // Bottoms
+        new[] { new List<string>(), new List<string>() } // Hands
+
+        // cardPositions = new List<string>[gridSize][];
+
+        // for (int i = 0; i < gridSize; i++){
+        //     cardPositions[i] = new List<string>[gridSize];
+        //     for (int j = 0; j < gridSize; j++){
+        //         cardPositions[i][j] = new List<string>();
+        //     }
+        // }
+    }
 
 
     private static void Shuffle<T>(IList<T> list)
@@ -191,4 +236,5 @@ public class MemoryMadnessController : MonoBehaviour
         yield return new WaitForSeconds(3);
     }
 }
+
 
