@@ -6029,7 +6029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 365868a99d30f4fc2bd84c80e98cd348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: 4
+  gridSize: 2
   cardFaces:
   - {fileID: 21300000, guid: 1d088d048f007482fb042848ee746b33, type: 3}
   - {fileID: 21300000, guid: 3fcca6249f3bb48d4a07729ba34c2c98, type: 3}
@@ -6084,29 +6084,18 @@ MonoBehaviour:
   - {fileID: 21300000, guid: d193867dd21894c71b18b1e458d7fba5, type: 3}
   - {fileID: 21300000, guid: 6179ce2dd2b3d43eea08b15aad847f64, type: 3}
   cardPrefab: {fileID: 5065887226706944873, guid: 9da9d87835bf945039a842af77a7ccde, type: 3}
-  topPos:
-  - {fileID: 919395526}
-  - {fileID: 1378233017}
-  - {fileID: 1025163821}
-  - {fileID: 1528707694}
-  upperMiddlePos:
-  - {fileID: 1214240977}
-  - {fileID: 1177315111}
-  - {fileID: 836856793}
-  - {fileID: 1709097373}
-  lowerMiddlePos:
-  - {fileID: 2062451321}
-  - {fileID: 1052319858}
-  - {fileID: 1182948658}
-  - {fileID: 850764618}
-  bottomPos:
-  - {fileID: 1201698426}
-  - {fileID: 1827833382}
-  - {fileID: 215946133}
-  - {fileID: 785085817}
+  firstRow: []
+  secondRow: []
+  thirdRow: []
+  fourthRow: []
   handPos:
   - {fileID: 2128270934}
   - {fileID: 499799220}
+  rows:
+  - {fileID: 253356030}
+  - {fileID: 1912908328}
+  - {fileID: 1152084796}
+  - {fileID: 1637559671}
   cardsInPlay: []
   deck: []
 --- !u!114 &2075855442
