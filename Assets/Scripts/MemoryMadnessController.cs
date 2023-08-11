@@ -38,6 +38,9 @@ public class MemoryMadnessController : MonoBehaviour
 
     public void ReshuffleOnButtonClick()
     {
+
+        SetGridSize(gridSize);
+
         // Add cards currently in play back to the deck.
         deck.AddRange(cardsInPlay);
 
@@ -52,12 +55,7 @@ public class MemoryMadnessController : MonoBehaviour
 
         foreach (GameObject card in cards)
         {
-            string cardName = card.transform?.parent?.name ?? string.Empty;
-
-            if (!cardName.Equals(Constants.HAND_0, StringComparison.OrdinalIgnoreCase) && !cardName.Equals(Constants.HAND_1, StringComparison.OrdinalIgnoreCase))
-            {
-                Destroy(card);
-            }
+            Destroy(card);
         }
 
         SetCardPositions();
@@ -79,7 +77,7 @@ public class MemoryMadnessController : MonoBehaviour
 
         cardCounter.UpdateCardCount();
 
-        if (deck.Count > 8)
+        if (deck.Count > (gridSize-1))
         {
             MemMadSort();
             StartCoroutine(MemMadDeal());
@@ -156,9 +154,8 @@ public class MemoryMadnessController : MonoBehaviour
     }
 
 
-    private void PlayCards()
+    public void PlayCards()
     {
-        deck = GenerateDeck();
         Shuffle(deck);
         MemMadSort();
         StartCoroutine(MemMadDeal());
@@ -166,6 +163,8 @@ public class MemoryMadnessController : MonoBehaviour
 
     private void Start()
     {
+        deck = GenerateDeck();
+
         gridSize = Mathf.Clamp(gridSize, 2, 4); // ensure the grid size is within valid range
 
         cardPositions = new List<string>[gridSize + 1][];
@@ -219,24 +218,51 @@ public class MemoryMadnessController : MonoBehaviour
 
     private void SetCardPositions()
     {
-        cardPositions = new List<string>[gridSize][];
+        // cardPositions = new List<string>[gridSize][];
 
-        for (int i = 0; i < gridSize; i++)
-        {
-            cardPositions[i] = new List<string>[gridSize];
+        // for (int i = 0; i < gridSize; i++)
+        // {
+        //     cardPositions[i] = new List<string>[gridSize];
 
-            for (int j = 0; j < gridSize; j++)
-            {
-                cardPositions[i][j] = new List<string>();
-            }
+        //     for (int j = 0; j < gridSize; j++)
+        //     {
+        //         cardPositions[i][j] = new List<string>();
+        //     }
+        // }
+
+        // // For hand positions
+        // cardPositions[gridSize] = new List<string>[2];
+        // for (int j = 0; j < 2; j++)
+        // {
+        //     cardPositions[gridSize][j] = new List<string>();
+        // }
+
+        if (gridSize == 2) {
+            
+            cardPositions = new[]{
+            new[] { new List<string>(), new List<string>() }, // Tops
+            new[] { new List<string>(), new List<string>() }, // Bottoms
+            new[] { new List<string>(), new List<string>() } // Hands
+            };
         }
+        else if (gridSize == 3){
 
-        // For hand positions
-        cardPositions[gridSize] = new List<string>[2];
+            cardPositions = new[]{
+            new[] { new List<string>(), new List<string>(), new List<string>() }, // Tops
+            new[] { new List<string>(), new List<string>(), new List<string>() }, // Middles
+            new[] { new List<string>(), new List<string>(), new List<string>() }, // Bottoms
+            new[] { new List<string>(), new List<string>() } // Hands
+            };
+        }
+        else if (gridSize == 4){
 
-        for (int j = 0; j < 2; j++)
-        {
-            cardPositions[gridSize][j] = new List<string>();
+            cardPositions = new[]{
+            new[] { new List<string>(), new List<string>(), new List<string>(), new List<string>() }, // Tops
+            new[] { new List<string>(), new List<string>(), new List<string>(), new List<string>() }, // UpperMiddles
+            new[] { new List<string>(), new List<string>(), new List<string>(), new List<string>() }, // LowerMiddles
+            new[] { new List<string>(), new List<string>(), new List<string>(), new List<string>() }, // Bottoms
+            new[] { new List<string>(), new List<string>() } // Hands
+            };
         }
     }
 

@@ -6029,7 +6029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 365868a99d30f4fc2bd84c80e98cd348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: 2
+  gridSize: 4
   cardFaces:
   - {fileID: 21300000, guid: 1d088d048f007482fb042848ee746b33, type: 3}
   - {fileID: 21300000, guid: 3fcca6249f3bb48d4a07729ba34c2c98, type: 3}

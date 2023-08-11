@@ -14,7 +14,6 @@ public class UserInput : MonoBehaviour
     public GameObject selectedHandCard;
 
     private int matchedCards = 0;
-    private const int totalGridCards = 9;
     
     private bool AreColorsMatching(char handSuit, char suit)
     {
@@ -34,6 +33,8 @@ public class UserInput : MonoBehaviour
 
     private void ClickGameCard(GameObject selected)
     {
+
+        int totalGridCards = memoryMadnessController.gridSize * memoryMadnessController.gridSize;
         print("Clicked on game card");
 
         if (selectedHandCard == null) return;
