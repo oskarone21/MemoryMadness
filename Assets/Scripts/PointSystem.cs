@@ -3,7 +3,6 @@ using TMPro;
 
 public class PointSystem : MonoBehaviour
 {
-
     public TextMeshProUGUI scoreText;
     private int score;
 
@@ -12,12 +11,6 @@ public class PointSystem : MonoBehaviour
     {
         score = 0;
         UpdateScore(0);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void UpdateScore(int scoreToAdd)

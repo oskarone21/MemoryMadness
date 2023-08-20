@@ -1,23 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class UpdateSprite : MonoBehaviour
 {
-    public Sprite cardFace;
-    public Sprite cardBack;
+    [FormerlySerializedAs("cardFace")] public Sprite _CardFace;
+    [FormerlySerializedAs("cardBack")] public Sprite __CardBack;
 
-    private SpriteRenderer spriteRenderer;
-    private Selectable selectable;
-    private MemoryMadnessController memoryMadness;
-    private UserInput userInput;
+    private SpriteRenderer __SpriteRenderer;
+    private Selectable __Selectable;
+    private MemoryMadnessController __MemoryMadness;
+    private UserInput __UserInput;
 
     // Start is called before the first frame update
     private void Start()
     {
-        memoryMadness = FindObjectOfType<MemoryMadnessController>();
-        userInput = FindObjectOfType<UserInput>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        selectable = GetComponent<Selectable>();
+        __MemoryMadness = FindObjectOfType<MemoryMadnessController>();
+        __UserInput = FindObjectOfType<UserInput>();
+        __SpriteRenderer = GetComponent<SpriteRenderer>();
+        __Selectable = GetComponent<Selectable>();
 
         AssignCardFace();
     }
@@ -38,7 +39,7 @@ public class UpdateSprite : MonoBehaviour
         {
             if (name == card)
             {
-                cardFace = memoryMadness.cardFaces[i];
+                _CardFace = __MemoryMadness.__CardFaces[i];
                 break;
             }
             i++;
@@ -47,14 +48,14 @@ public class UpdateSprite : MonoBehaviour
 
     private void UpdateCardSprite()
     {
-        spriteRenderer.sprite = selectable.faceUp ? cardFace : cardBack;
+        __SpriteRenderer.sprite = __Selectable.faceUp ? _CardFace : __CardBack;
     }
 
     private void HighlightSelectedCard()
     {
-        if (userInput.selectedHandCard)
+        if (__UserInput.__SelectedHandCard)
         {
-            spriteRenderer.color = (name == userInput.selectedHandCard.name) ? Color.yellow : Color.white;
+            __SpriteRenderer.color = (name == __UserInput.__SelectedHandCard.name) ? Color.yellow : Color.white;
         }
     }
 }

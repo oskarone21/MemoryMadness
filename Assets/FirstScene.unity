@@ -3772,7 +3772,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d313a7c4d98c49a4bb1c9461dcf75a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameMenuPanel: {fileID: 0}
+  gameMenuPanel: {fileID: 601711379}
+  memoryMadnessController: {fileID: 0}
 --- !u!1 &1284377493
 GameObject:
   m_ObjectHideFlags: 0
@@ -6029,8 +6030,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 365868a99d30f4fc2bd84c80e98cd348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: 4
-  cardFaces:
+  __Deck: []
+  __GridSize: 4
+  __CardFaces:
   - {fileID: 21300000, guid: 1d088d048f007482fb042848ee746b33, type: 3}
   - {fileID: 21300000, guid: 3fcca6249f3bb48d4a07729ba34c2c98, type: 3}
   - {fileID: 21300000, guid: 2bdba8b6bccbc4b31b92dc842baec524, type: 3}
@@ -6083,21 +6085,15 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c16b6e997c21844d5a8232e15e79275e, type: 3}
   - {fileID: 21300000, guid: d193867dd21894c71b18b1e458d7fba5, type: 3}
   - {fileID: 21300000, guid: 6179ce2dd2b3d43eea08b15aad847f64, type: 3}
-  cardPrefab: {fileID: 5065887226706944873, guid: 9da9d87835bf945039a842af77a7ccde, type: 3}
-  firstRow: []
-  secondRow: []
-  thirdRow: []
-  fourthRow: []
-  handPos:
+  __CardPrefab: {fileID: 5065887226706944873, guid: 9da9d87835bf945039a842af77a7ccde, type: 3}
+  __HandPos:
   - {fileID: 2128270934}
   - {fileID: 499799220}
-  rows:
+  __Rows:
   - {fileID: 253356030}
   - {fileID: 1912908328}
   - {fileID: 1152084796}
   - {fileID: 1637559671}
-  cardsInPlay: []
-  deck: []
 --- !u!114 &2075855442
 MonoBehaviour:
   m_ObjectHideFlags: 0
