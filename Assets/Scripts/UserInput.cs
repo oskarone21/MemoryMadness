@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.SocialPlatforms.Impl;
 
 public class UserInput : MonoBehaviour
@@ -6,89 +7,87 @@ public class UserInput : MonoBehaviour
     private const string HAND_0 = "Hand0";
     private const string HAND_1 = "Hand1";
 
-    private MemoryMadnessController memoryMadnessController;
-    public EndGameMenuController endGameMenuController;
+    private MemoryMadnessController __MemoryMadnessController;
+    [FormerlySerializedAs("endGameMenuController")] public EndGameMenuController __EndGameMenuController;
 
-    private CardCounter cardCounter;
-    private PointSystem pointSys;
-    public GameObject selectedHandCard;
+    private CardCounter __CardCounter;
+    private PointSystem __PointSys;
+    [FormerlySerializedAs("selectedHandCard")] public GameObject __SelectedHandCard;
 
-    private int matchedCards = 0;
-    private const int totalGridCards = 9;
+    private int __MatchedCards = 0;
     
-    private bool AreColorsMatching(char handSuit, char suit)
-    {
-        return (handSuit == 'C' && suit == 'S') || (handSuit == 'S' && suit == 'C') ||
-               (handSuit == 'H' && suit == 'D') || (handSuit == 'D' && suit == 'H');
-    }
+    private bool AreColorsMatching(char handSuit, char suit) =>
+        (handSuit == 'C' && suit == 'S') || (handSuit == 'S' && suit == 'C') ||
+        (handSuit == 'H' && suit == 'D') || (handSuit == 'D' && suit == 'H');
     
     private void ClickOnHandCard(GameObject selected)
     {
         print("Clicked on hand card");
 
-        if (selectedHandCard == null)
+        if (__MemoryMadnessController.CardsReshuffled && selected != null)
         {
-            selectedHandCard = selected;
+            __SelectedHandCard = selected;
+            __MemoryMadnessController.CardsReshuffled = false;
         }
     }
 
     private void ClickGameCard(GameObject selected)
     {
+        int totalGridCards = __MemoryMadnessController.__GridSize * __MemoryMadnessController.__GridSize;
         print("Clicked on game card");
 
-        if (selectedHandCard == null) return;
+        if (__SelectedHandCard == null) return;
         
-        char selectedHandSuit = selectedHandCard.name[0];
-        char selectedHandNumber = selectedHandCard.name[1];
+        char selectedHandSuit = __SelectedHandCard.name[0];
+        char selectedHandNumber = __SelectedHandCard.name[1];
 
         char selectedSuit = selected.name[0];
         char selectedNumber = selected.name[1];
 
         if (selectedHandNumber == selectedNumber)
         {
-            pointSys.UpdateScore(3);
+            __PointSys.UpdateScore(3);
             Destroy(selected);
         }
         else if (selectedHandSuit == selectedSuit)
         {
-            pointSys.UpdateScore(2);
+            __PointSys.UpdateScore(2);
             Destroy(selected);
         }
         else if (AreColorsMatching(selectedHandSuit, selectedSuit))
         {
-            pointSys.UpdateScore(1);
+            __PointSys.UpdateScore(1);
 
             Destroy(selected);
         }
         else
         {
             Destroy(selected);
-            pointSys.UpdateScore(-1);
+            __PointSys.UpdateScore(-1);
         }
 
         selected.SetActive(false);
-        cardCounter.UpdateCardCount();
-        matchedCards++;
+        __CardCounter.UpdateCardCount();
+        __MatchedCards++;
 
-        int _CurrentScore = pointSys.GetScore();
+        int _CurrentScore = __PointSys.GetScore();
 
         if(_CurrentScore < 0)
         {
-            endGameMenuController.Show(_CurrentScore);
+            __EndGameMenuController.Show(_CurrentScore);
         }
         
-        if (matchedCards >= totalGridCards)
+        if (__MatchedCards >= totalGridCards)
         {
-            matchedCards = 0;
-            memoryMadnessController.ReplaceCards();
+            __MatchedCards = 0;
+            __MemoryMadnessController.PlayCards();
         }
 
         GameObject[] cards = GameObject.FindGameObjectsWithTag("Card");
 
-        if (cards.Length == 1)
+        if (cards.Length == 2)
         {
-            endGameMenuController.Show(_CurrentScore);
-            return;
+            __EndGameMenuController.Show(_CurrentScore);
         }
     }
     
@@ -120,14 +119,11 @@ public class UserInput : MonoBehaviour
     
     private void Start()
     {
-        pointSys = FindObjectOfType<PointSystem>();
-        cardCounter = FindObjectOfType<CardCounter>();
-        memoryMadnessController = FindObjectOfType<MemoryMadnessController>();
+        __PointSys = FindObjectOfType<PointSystem>();
+        __CardCounter = FindObjectOfType<CardCounter>();
+        __MemoryMadnessController = FindObjectOfType<MemoryMadnessController>();
     }
     
     // Update is called once per frame
-    private void Update()
-    {
-        GetMouseClick();
-    }
+    private void Update() => GetMouseClick();
 }

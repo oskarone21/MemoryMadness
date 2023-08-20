@@ -1,25 +1,38 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameMenuButtonController : MonoBehaviour
 {
     public GameObject gameMenuPanel;
-
-    public void LoadGameMenu()
-    {
-        gameMenuPanel.SetActive(true);
-    }
-
+    public MemoryMadnessController memoryMadnessController;
+    
     public void Reshuffle()
     {
-        MemoryMadnessController memoryMadnessController = FindObjectOfType<MemoryMadnessController>();
-        memoryMadnessController.ReshuffleOnButtonClick();
+        memoryMadnessController.ReplaceCards();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (!memoryMadnessController.GetLastDeal())
         {
-            Reshuffle();
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Reshuffle();
+            }   
         }
+        else
+        {
+            GameObject _ReshuffleButton = GameObject.Find("ReshuffleButton");
+            if (_ReshuffleButton != null)
+            {
+                _ReshuffleButton.GetComponent<Button>().gameObject.SetActive(false);
+            }
+            gameMenuPanel.SetActive(false);
+        }
+    }
+
+    private void Start()
+    {
+        memoryMadnessController = FindObjectOfType<MemoryMadnessController>();
     }
 }
