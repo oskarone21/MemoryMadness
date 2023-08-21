@@ -16,13 +16,13 @@ public class UserInput : MonoBehaviour
     private int matchedCards = 0;
     private const int totalGridCards = 9;
     
-    private bool AreColorsMatching(char handSuit, char suit)
+    public bool AreColorsMatching(char handSuit, char suit)
     {
         return (handSuit == 'C' && suit == 'S') || (handSuit == 'S' && suit == 'C') ||
                (handSuit == 'H' && suit == 'D') || (handSuit == 'D' && suit == 'H');
     }
     
-    private void ClickOnHandCard(GameObject selected)
+    public void ClickOnHandCard(GameObject selected)
     {
         print("Clicked on hand card");
 

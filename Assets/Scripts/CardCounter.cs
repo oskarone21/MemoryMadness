@@ -4,7 +4,7 @@ using UnityEngine;
 public class CardCounter : MonoBehaviour
 {
     public TextMeshProUGUI cardCounter;
-    private int cardsLeft;
+    public int cardsLeft;
     private MemoryMadnessController memMad;
 
     // Start is called before the first frame update

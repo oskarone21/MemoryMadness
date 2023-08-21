@@ -5,7 +5,7 @@ public class PointSystem : MonoBehaviour
 {
 
     public TextMeshProUGUI scoreText;
-    private int score;
+    public int score;
 
     // Start is called before the first frame update
     void Start()
