@@ -1,27 +1,32 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class CardCounter : MonoBehaviour
 {
-    public TextMeshProUGUI cardCounter;
-    public int cardsLeft;
-    private MemoryMadnessController memMad;
-
-    // Start is called before the first frame update
-    private void Start()
+    [FormerlySerializedAs("cardCounter")] public TextMeshProUGUI __CardCounter;
+    public int __CardsLeft;
+    public MemoryMadnessController __MemoryMadnessController;
+    
+    public CardCounter(int cardsLeft)
     {
-        memMad = FindObjectOfType<MemoryMadnessController>();
-        cardsLeft = memMad.deck.Count;
-        cardCounter.text = "Cards Left: " + cardsLeft;
+        __CardsLeft = cardsLeft;
+        __CardCounter.text = "Cards Left: " + __CardsLeft;
     }
-
-    public void UpdateCardCount()
+    
+    public void UpdateCardCount(int cardsLeft = 0)
     {
-        cardsLeft--;
-        if(cardsLeft == 0)
+        __CardsLeft--;
+        if(__CardsLeft == 0)
         {
-            cardsLeft = 1;
+            __CardsLeft = 1;
         }
-        cardCounter.text = $"Cards Left: {cardsLeft}";
+
+        if (cardsLeft > 0)
+        {
+            __CardsLeft = cardsLeft;
+        }
+        
+        __CardCounter.text = $"Cards Left: {__CardsLeft}";
     }
 }

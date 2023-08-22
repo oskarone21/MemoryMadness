@@ -20,8 +20,4 @@ public class UserInputTest
         Assert.IsTrue(userinput.AreColorsMatching(handSuit, suit));
     }
 
-    [Test]
-    public void ClickGameCard()
-    {}
-
 }

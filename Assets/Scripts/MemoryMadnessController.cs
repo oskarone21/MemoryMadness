@@ -1,178 +1,206 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
-using Unity.Burst.CompilerServices;
-using System;
+using UnityEngine;
+using UnityEngine.Serialization;
 
 public class MemoryMadnessController : MonoBehaviour
 {
-    private CardCounter cardCounter;
+    private const int HAND_SIZE = 2;
+    
+    private CardCounter __CardCounter;
+    private List<string>[][] __CardPositions;
+    public List<string> __Deck;
+    public int __GridSize;
+    private bool __LastDeal = false;
 
-    public Sprite[] cardFaces;
-    public GameObject cardPrefab;
+    private GameObject[][] __Cards;
+    [FormerlySerializedAs("cardFaces")]
+    public Sprite[] __CardFaces;
+    [FormerlySerializedAs("cardPrefab")]
+    public GameObject __CardPrefab;
+    [FormerlySerializedAs("handPos")]
+    public GameObject[] __HandPos;
 
-    public GameObject[] topPos;
-    public GameObject[] middlePos;
-    public GameObject[] bottomPos;
-    public GameObject[] handPos;
+    [FormerlySerializedAs("rows")]
+    public GameObject[] __Rows;
+    
+    public static readonly string[] __Suits = { "C", "D", "H", "S" };
+    public static readonly string[] __Values = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
 
-    private static readonly string[] suits = { "C", "D", "H", "S" };
-    private static readonly string[] values = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
-    public List<string> cardsInPlay = new List<string>();
+    public int GetCardsLeft()
+    {
+        var _ActiveCards = GetActiveCards();
+        int _Deck = __Deck.Count;
 
-    private List<string>[][] cardPositions;
-    public List<string> deck;
+        // return _ActiveCards + _Deck;
+        return _Deck;
+    }
+    public bool GetLastDeal() =>
+        __LastDeal;
 
+    public void SetGridSize(int size) =>
+        __GridSize = size;
+    
     private void AddCardTo(ICollection<string> cardList)
     {
-        cardList.Add(deck.Last());
-        deck.RemoveAt(deck.Count - 1);
+        cardList.Add(__Deck.Last());
+        __Deck.RemoveAt(__Deck.Count - 1);
     }
-
-    public void ReshuffleOnButtonClick()
+     
+    private static IEnumerator DelayInitialDealFlag()
     {
-        // Add cards currently in play back to the deck.
-        deck.AddRange(cardsInPlay);
-
-        // Now, clear the cards in play.
-        cardsInPlay.Clear();
-
-        // Now shuffle the deck again.
-        Shuffle(deck);
-
-        // Proceed to reshuffle and deal the cards as before.
-        GameObject[] cards = GameObject.FindGameObjectsWithTag("Card");
-
-        foreach (GameObject card in cards)
-        {
-            string cardName = card.transform?.parent?.name ?? string.Empty;
-
-            if (!cardName.Equals(Constants.HAND_0, StringComparison.OrdinalIgnoreCase) && !cardName.Equals(Constants.HAND_1, StringComparison.OrdinalIgnoreCase))
-            {
-                Destroy(card);
-            }
-        }
-
-        SetCardPositions();
-        MemMadSort();
-        StartCoroutine(MemMadDeal(autoReshuffle: false));
+        // Wait for 3 seconds to ensure the cards have been dealt
+        yield return new WaitForSeconds(3);
     }
+
+    public GameObject[] GetActiveCards() => GameObject.FindGameObjectsWithTag("Card");
 
     public void ReplaceCards()
     {
-        // Clear the grid
-        GameObject[] cards = GameObject.FindGameObjectsWithTag("Card");
-
-        foreach (GameObject card in cards)
+        CardsReshuffled = true;
+        GameObject[] _Cards = GetActiveCards();
+        int _CardsLeft = 0;
+        foreach (GameObject card in _Cards)
         {
-            Destroy(card);
+            card.SetActive(false);
         }
 
-        SetCardPositions();
-
-        cardCounter.UpdateCardCount();
-
-        if (deck.Count > 8)
+        SetGridSize();
+        
+        int _GridSize = __GridSize * __GridSize + HAND_SIZE;
+        
+        __CardCounter.UpdateCardCount(__Deck.Count - 2);
+        
+        if (__Deck.Count >= _GridSize)
         {
             MemMadSort();
             StartCoroutine(MemMadDeal());
         }
         else
         {
-            AddCardTo(cardPositions[0][0]); // Add card to the first position in the top row
-            AddCardTo(cardPositions[3][0]); // Add card to the first position in the hand
-
-            // Update the card count
-            cardCounter.UpdateCardCount();
-
+            __LastDeal = true;
+            switch (__GridSize)
+            {
+                case 4:
+                    _CardsLeft = 14;
+                    MemMadSort(true, _CardsLeft);
+                    break;
+                case 3:
+                    _CardsLeft = 6;
+                    MemMadSort(true, _CardsLeft);
+                    break;
+                case 2:
+                    _CardsLeft = 4;
+                    MemMadSort(true, _CardsLeft);
+                    break;
+            }
+            
             // Repopulate the grid and hand with the remaining cards
-            StartCoroutine(MemMadDeal(true));
+            StartCoroutine(MemMadDeal(true, _CardsLeft));
         }
     }
 
     private IEnumerator DealToPositions(IReadOnlyList<List<string>> cardLists, IReadOnlyList<GameObject> positions, bool isHandCard = false)
     {
-        for (int i = 0; i < cardLists.Count; i++)
+        if (positions.Count > 0)
         {
-            float zOffset = 0.03f;
-            foreach (string card in cardLists[i])
+            // int _GridSize = isHandCard ? HAND_SIZE : __GridSize;
+            
+            int gridSizeToPopulate = Mathf.Min(cardLists.Count, positions.Count);
+
+            // Loop through the rows/columns based on the size calculated
+            for (int i = 0; i < gridSizeToPopulate; i++)
             {
-                if (!isHandCard)
+                float zOffset = 0.03f;
+                foreach (string card in cardLists[i])
                 {
-                    cardsInPlay.Add(card);
+                    yield return new WaitForSeconds(0.05f);
+                
+                    GameObject newCard = Instantiate(__CardPrefab, positions[i].transform.position + new Vector3(0, 0, -zOffset), Quaternion.identity, positions[i].transform);
+                    newCard.name = card;
+                    newCard.GetComponent<Selectable>().faceUp = true;
+                    zOffset += 0.03f;
                 }
-                yield return new WaitForSeconds(0.05f);
-                GameObject newCard = Instantiate(cardPrefab, positions[i].transform.position + new Vector3(0, 0, -zOffset), Quaternion.identity, positions[i].transform);
-                newCard.name = card;
-                newCard.GetComponent<Selectable>().faceUp = true;
-                zOffset += 0.03f;
             }
         }
     }
-    
-    public static List<string> GenerateDeck() => 
-        suits.SelectMany(_ => values, (suit, value) => suit + value).ToList();
 
-    private IEnumerator MemMadDeal(bool lastDeal = false, bool autoReshuffle = true)
+    public static List<string> GenerateDeck() => 
+        __Suits.SelectMany(_ => __Values, (suit, value) => suit + value).ToList();
+
+    private  IEnumerator MemMadDeal(bool lastDeal = false, int cardsLeft = 0)
     {
         if (lastDeal)
         {
-            yield return StartCoroutine(DealToPositions(cardPositions[0], topPos));
-            yield return StartCoroutine(DealToPositions(cardPositions[3], handPos));
+            int rowsToPopulate = cardsLeft / __GridSize,
+                columnsToPopulate = cardsLeft % __GridSize;
+            
+            for (int i = 0; i < rowsToPopulate; i++)
+            {
+                yield return StartCoroutine(DealToPositions(__CardPositions[i], __Rows[i].GetComponentsInChildren<Transform>().Skip(1).Select(t => t.gameObject).ToArray()));
+            }
+            
+            if (columnsToPopulate > 0)
+            {
+                yield return StartCoroutine(DealToPositions(__CardPositions[rowsToPopulate], __Rows[rowsToPopulate].GetComponentsInChildren<Transform>().Skip(1).Take(columnsToPopulate).Select(t => t.gameObject).ToArray()));
+            }
         }
         else
         {
-            yield return StartCoroutine(DealToPositions(cardPositions[0], topPos));
-            yield return StartCoroutine(DealToPositions(cardPositions[1], middlePos));
-            yield return StartCoroutine(DealToPositions(cardPositions[2], bottomPos));
-            if (autoReshuffle)
+            for (int i = 0; i < __GridSize; i++)
             {
-                yield return StartCoroutine(DealToPositions(cardPositions[3], handPos, true));
+                yield return StartCoroutine(DealToPositions(__CardPositions[i], __Rows[i].GetComponentsInChildren<Transform>().Skip(1).Select(t => t.gameObject).ToArray()));
             }
         }
+        
+        yield return StartCoroutine(DealToPositions(__CardPositions[__GridSize], __HandPos, true));
     }
-
-
-    private void MemMadSort()
+    
+    private void MemMadSort(bool lastDeal = false, int cardsLeft = 0)
     {
-        for (int i = 0; i < 3; i++)
+        if (lastDeal)
         {
-            AddCardTo(cardPositions[2][i]); // Bottom
-            AddCardTo(cardPositions[1][i]); // Middle
-            AddCardTo(cardPositions[0][i]); // Top
+            int rowsToPopulate = cardsLeft / __GridSize,
+                columnsToPopulate = cardsLeft % __GridSize;
+            
+            for (int _row = 0; _row < rowsToPopulate; _row++)
+            {
+                for (int _col = 0; _col < __GridSize; _col++)
+                {
+                    AddCardTo(__CardPositions[_row][_col]);
+                }
+            }
+
+            // Populate columns in the last row based on remaining cards
+            for (int _col = 0; _col < columnsToPopulate; _col++)
+            {
+                AddCardTo(__CardPositions[rowsToPopulate][_col]);
+            }
+        }
+        else
+        {
+            for (int _row = 0; _row < __GridSize; _row++)
+            {
+                for (int _col = 0; _col < __GridSize; _col++)
+                {
+                    AddCardTo(__CardPositions[_row][_col]);
+                }
+            }
         }
 
         for (int i = 0; i < 2; i++)
         {
-            AddCardTo(cardPositions[3][i]); // Hand
+            AddCardTo(__CardPositions[__GridSize][i]);
         }
     }
-    
-    private void PlayCards()
+
+    public void PlayCards()
     {
-        deck = GenerateDeck();
-        Shuffle(deck);
+        Shuffle(__Deck);
         MemMadSort();
         StartCoroutine(MemMadDeal());
     }
-    
-    private void Start()
-    {
-        SetCardPositions();
-        PlayCards();
-        StartCoroutine(DelayInitialDealFlag());
-        cardCounter = FindObjectOfType<CardCounter>();
-    }
-
-    private void SetCardPositions() => cardPositions = new[]
-        {
-            new[] { new List<string>(), new List<string>(), new List<string>() }, // Tops
-            new[] { new List<string>(), new List<string>(), new List<string>() }, // Middles
-            new[] { new List<string>(), new List<string>(), new List<string>() }, // Bottoms
-            new[] { new List<string>(), new List<string>() } // Hands
-        };
-
 
     private static void Shuffle<T>(IList<T> list)
     {
@@ -184,11 +212,77 @@ public class MemoryMadnessController : MonoBehaviour
             (list[k], list[n]) = (list[n], list[k]);
         }
     }
-    
-    private IEnumerator DelayInitialDealFlag()
-    {
-        // Wait for 3 seconds to ensure the cards have been dealt
-        yield return new WaitForSeconds(3);
-    }
-}
 
+    private void SetGridSize()
+    {
+        __GridSize = Mathf.Clamp(__GridSize, 2, 4); // Ensure the grid size is within the valid range
+
+        // Initialize the cardPositions array to match the gridSize
+        __CardPositions = new List<string>[__GridSize + 1][];
+        for (int i = 0; i < __GridSize; i++)
+        {
+            __CardPositions[i] = new List<string>[__GridSize];
+            for (int j = 0; j < __GridSize; j++)
+            {
+                __CardPositions[i][j] = new List<string>();
+            }
+        }
+
+        // Initialize the hand positions separately
+        __CardPositions[__GridSize] = new List<string>[2]; 
+        for (int i = 0; i < HAND_SIZE; i++)
+        {
+            __CardPositions[__GridSize][i] = new List<string>();
+        }
+
+        // Initialize the cards array to match the gridSize
+        __Cards = new GameObject[__GridSize][]; 
+        for (int i = 0; i < __GridSize; i++)
+        {
+            __Cards[i] = new GameObject[__GridSize]; 
+        }
+
+        // Assign the card objects to the 2D array
+        for (int i = 0; i < __GridSize; i++)
+        {
+            for (int j = 0; j < __GridSize; j++)
+            {
+                __Cards[i][j] = __Rows[i].transform.GetChild(j).gameObject;
+            }
+        }
+
+        // Hide all rows and cards not in use
+        for (int row = 0; row < __Rows.Length; row++)
+        {
+            __Rows[row].SetActive(false);
+            for (int col = 0; col < __Rows[row].transform.childCount; col++)
+            {
+                __Rows[row].transform.GetChild(col).gameObject.SetActive(false);
+            }
+        }
+
+        // Show the rows and cards in use
+        for (int row = 0; row < __GridSize; row++)
+        {
+            __Rows[row].SetActive(true);
+            for (int col = 0; col < __GridSize; col++)
+            {
+                __Cards[row][col].SetActive(true);
+            }
+        }
+    }
+    
+    private void Start()
+    {
+        __CardCounter = FindObjectOfType<CardCounter>();
+
+        __Deck = GenerateDeck();
+        
+        SetGridSize();
+        PlayCards();
+        __CardCounter.UpdateCardCount(52);
+        StartCoroutine(DelayInitialDealFlag()); // start the game with the set grid size
+    }
+    
+    public bool CardsReshuffled { get; set; } = true;
+}

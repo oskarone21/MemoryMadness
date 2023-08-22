@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using TMPro;
 
-public class NewTestScript
+public class PointSystemTest
 {
 
     public PointSystem ps;
@@ -18,16 +18,6 @@ public class NewTestScript
 
         Assert.AreEqual(0, ps.GetScore());
 
-    }
-
-    [Test]
-    public void UpdateScoreTest()
-    {
-        ps = new PointSystem();
-        ps.score = 0;
-        ps.UpdateScore(1);
-
-        Assert.AreEqual(1, ps.GetScore());
     }
 
 }

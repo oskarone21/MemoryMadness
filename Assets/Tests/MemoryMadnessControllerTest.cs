@@ -4,17 +4,29 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-public class MemoryMadnessController
+public class MemoryMadnessControllerTest
 {
     public MemoryMadnessController mmc;
+    public List<string> __Deck;
 
     [Test]
-    public void AddCardToTest()
+    public void GenerateDeckTest()
     {
-        ICollection<string> cardList
-        
+        mmc = new MemoryMadnessController();
+        __Deck = MemoryMadnessController.GenerateDeck();
+
+        Assert.AreEqual(52, __Deck.Count);
+
+    }
+
+    [Test]
+    public void GetActiveCardsTest()
+    {
+        GameObject Card = new GameObject();
+        Card.tag = "Card";
         mmc = new MemoryMadnessController();
 
+        Assert.AreEqual(1, mmc.GetActiveCards().Length);
     }
 
 }
