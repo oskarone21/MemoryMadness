@@ -16,11 +16,12 @@ public class UserInput : MonoBehaviour
 
     private int __MatchedCards = 0;
     
-    private bool AreColorsMatching(char handSuit, char suit) =>
+    public bool AreColorsMatching(char handSuit, char suit) =>
         (handSuit == 'C' && suit == 'S') || (handSuit == 'S' && suit == 'C') ||
         (handSuit == 'H' && suit == 'D') || (handSuit == 'D' && suit == 'H');
+
     
-    private void ClickOnHandCard(GameObject selected)
+    public void ClickOnHandCard(GameObject selected)
     {
         print("Clicked on hand card");
 

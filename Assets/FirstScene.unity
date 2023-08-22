@@ -5558,7 +5558,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0.001, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.15, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!81 &1962808153
@@ -6106,8 +6106,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed75df0244adb49feb961ae134a9e0db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endGameMenuController: {fileID: 1291071287}
-  selectedHandCard: {fileID: 0}
+  __EndGameMenuController: {fileID: 1291071287}
+  __SelectedHandCard: {fileID: 0}
 --- !u!4 &2075855443
 Transform:
   m_ObjectHideFlags: 0
@@ -6136,6 +6136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 372965076}
+  score: 0
 --- !u!114 &2075855445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6148,7 +6149,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb2bd02e47d18437a9c91abbeafdbb72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardCounter: {fileID: 1997263722}
+  __CardCounter: {fileID: 1997263722}
+  __CardsLeft: 0
+  __MemoryMadnessController: {fileID: 0}
 --- !u!1 &2116659700
 GameObject:
   m_ObjectHideFlags: 0

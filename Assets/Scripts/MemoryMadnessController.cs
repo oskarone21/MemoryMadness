@@ -25,8 +25,8 @@ public class MemoryMadnessController : MonoBehaviour
     [FormerlySerializedAs("rows")]
     public GameObject[] __Rows;
     
-    private static readonly string[] __Suits = { "C", "D", "H", "S" };
-    private static readonly string[] __Values = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
+    public static readonly string[] __Suits = { "C", "D", "H", "S" };
+    public static readonly string[] __Values = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
 
     public int GetCardsLeft()
     {
@@ -54,7 +54,7 @@ public class MemoryMadnessController : MonoBehaviour
         yield return new WaitForSeconds(3);
     }
 
-    private GameObject[] GetActiveCards() => GameObject.FindGameObjectsWithTag("Card");
+    public GameObject[] GetActiveCards() => GameObject.FindGameObjectsWithTag("Card");
 
     public void ReplaceCards()
     {

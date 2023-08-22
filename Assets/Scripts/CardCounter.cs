@@ -5,8 +5,8 @@ using UnityEngine.Serialization;
 public class CardCounter : MonoBehaviour
 {
     [FormerlySerializedAs("cardCounter")] public TextMeshProUGUI __CardCounter;
-    private int __CardsLeft;
-    private MemoryMadnessController __MemoryMadnessController;
+    public int __CardsLeft;
+    public MemoryMadnessController __MemoryMadnessController;
     
     public CardCounter(int cardsLeft)
     {
