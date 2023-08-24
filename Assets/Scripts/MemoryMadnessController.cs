@@ -275,6 +275,7 @@ public class MemoryMadnessController : MonoBehaviour
     private void Start()
     {
         __CardCounter = FindObjectOfType<CardCounter>();
+        __GridSize = PlayerPrefs.GetInt("GridSize", 3);
 
         __Deck = GenerateDeck();
         

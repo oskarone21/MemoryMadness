@@ -13,7 +13,7 @@ public class GameMenuButtonController : MonoBehaviour
 
     private void Update()
     {
-        if (!memoryMadnessController.GetLastDeal())
+        if (memoryMadnessController != null && !memoryMadnessController.GetLastDeal())
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
