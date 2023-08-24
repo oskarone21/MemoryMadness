@@ -1,24 +1,48 @@
+using Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class EndGameMenuController : MonoBehaviour
 {
-    public GameObject endGameMenu;
-    public TMP_Text scoreText;
+    [FormerlySerializedAs("endGameMenu")] public GameObject __EndGameMenu;
+    [FormerlySerializedAs("scoreText")] public TMP_Text __ScoreText;
+    public TMP_InputField __InputField;
+    public LeaderboardManager __LeaderboardManager;
+    private int __Score;
 
-    public void Show(int score)
+    private void Start()
     {
-        if(score < 0)
+        __Score = PlayerPrefs.GetInt("Score");
+
+        if(__Score < 0)
         {
-            scoreText.text = $"You lost! Your score is: {score}";
+            __ScoreText.text = $"You lost! Your score is: {__Score}";
         }
         else
         {
-            scoreText.text += $" {score}";
+            __ScoreText.text += $" {__Score}";
         }
+    }
 
-        endGameMenu.SetActive(true);
+    public void AddUpdateLeaderboard()
+    {
+        if (__LeaderboardManager != null && __InputField != null)
+        {
+            __LeaderboardManager.AddEntry(__InputField.text, __Score);
+
+            GameObject _UsernameButton = GameObject.Find("UsernameButton");
+            if (_UsernameButton != null)
+            {
+                _UsernameButton.SetActive(false);
+            }
+        }
+        else
+        {
+            if (__LeaderboardManager == null) Debug.LogError("LeaderboardManager not found");
+            if (__InputField == null) Debug.LogError("InputField not assigned");
+        }
     }
 
     public void Quit() =>

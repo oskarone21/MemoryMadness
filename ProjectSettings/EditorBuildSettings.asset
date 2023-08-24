@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/LeadershipScene.unity
     guid: fb8a21974a73e4e9288d2006675dda3d
+  - enabled: 1
+    path: Assets/EndGameScene.unity
+    guid: d18e2fda18abe4388862c1af68719314
   m_configObjects: {}
