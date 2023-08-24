@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.SocialPlatforms.Impl;
 
@@ -8,7 +9,6 @@ public class UserInput : MonoBehaviour
     private const string HAND_1 = "Hand1";
 
     private MemoryMadnessController __MemoryMadnessController;
-    [FormerlySerializedAs("endGameMenuController")] public EndGameMenuController __EndGameMenuController;
 
     private CardCounter __CardCounter;
     private PointSystem __PointSys;
@@ -74,21 +74,28 @@ public class UserInput : MonoBehaviour
 
         if(_CurrentScore < 0)
         {
-            __EndGameMenuController.Show(_CurrentScore);
+            ShowEndGameScreen(_CurrentScore);
         }
         
         if (__MatchedCards >= totalGridCards)
         {
             __MatchedCards = 0;
-            __MemoryMadnessController.PlayCards();
+            __MemoryMadnessController.ReplaceCards();
         }
 
         GameObject[] cards = GameObject.FindGameObjectsWithTag("Card");
 
         if (cards.Length == 2)
         {
-            __EndGameMenuController.Show(_CurrentScore);
+            ShowEndGameScreen(_CurrentScore);
         }
+    }
+
+    private void ShowEndGameScreen(int score)
+    {
+        PlayerPrefs.SetInt("Score", score);
+
+        SceneManager.LoadScene("EndGameScene");
     }
     
     private void GetMouseClick()

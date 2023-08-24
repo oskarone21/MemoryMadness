@@ -27,15 +27,7 @@ public class MemoryMadnessController : MonoBehaviour
     
     private static readonly string[] __Suits = { "C", "D", "H", "S" };
     private static readonly string[] __Values = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
-
-    public int GetCardsLeft()
-    {
-        var _ActiveCards = GetActiveCards();
-        int _Deck = __Deck.Count;
-
-        // return _ActiveCards + _Deck;
-        return _Deck;
-    }
+    
     public bool GetLastDeal() =>
         __LastDeal;
 
@@ -53,7 +45,7 @@ public class MemoryMadnessController : MonoBehaviour
         // Wait for 3 seconds to ensure the cards have been dealt
         yield return new WaitForSeconds(3);
     }
-
+    
     private GameObject[] GetActiveCards() => GameObject.FindGameObjectsWithTag("Card");
 
     public void ReplaceCards()
@@ -275,6 +267,7 @@ public class MemoryMadnessController : MonoBehaviour
     private void Start()
     {
         __CardCounter = FindObjectOfType<CardCounter>();
+        __GridSize = PlayerPrefs.GetInt("GridSize", 3);
 
         __Deck = GenerateDeck();
         
